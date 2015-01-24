@@ -8,9 +8,6 @@
 int size_changed = 0;
 
 void terminal_size_changed() {
-	if(!isatty(STDIN_FILENO)) {
-		exit(EXIT_FAILURE);
-	}
 	size_changed = 1;
 }
 
@@ -27,6 +24,9 @@ int main() {
 	while(1) {
 		if(size_changed) {
 			size_changed = 0;
+			if(!isatty(STDIN_FILENO)) {
+				exit(EXIT_FAILURE);
+			}
 			if(ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1) {
 				exit(EXIT_FAILURE);
 			}
