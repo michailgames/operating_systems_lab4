@@ -16,8 +16,14 @@ void end() {
 }
 
 int main() {
-	signal(SIGWINCH, terminal_size_changed);
-	signal(SIGINT, end);
+	struct sigaction sigwinch_action;
+	sigwinch_action.sa_handler = terminal_size_changed;
+	sigaction(SIGWINCH, &sigwinch_action, NULL);
+	
+	struct sigaction sigint_action;
+	sigint_action.sa_handler = end;
+	sigaction(SIGINT, &sigint_action, NULL);
+	
 	terminal_size_changed();
 	struct winsize ws;
 	struct timespec wait_time;
